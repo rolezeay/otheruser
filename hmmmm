@@ -1,4 +1,4 @@
-    local player = game.Players.LocalPlayer
+local player = game.Players.LocalPlayer
 local playerHeadIcon = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=420&height=420&format=png"
 
 
@@ -1151,6 +1151,93 @@ local Button = Tab:CreateButton({
 local Section = Tab:CreateSection("Step 3 enjoy annoying teenager speds!")
 
 local Tab = Window:CreateTab("Meepcity", 126133429358591) -- Title, Image
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Creating the input field for User ID
+local Input = Tab:CreateInput({
+   Name = "Enter User ID",
+   CurrentValue = "",
+   PlaceholderText = "Type User ID here...",
+   RemoveTextAfterFocusLost = false,
+   Flag = "Input1",
+   Callback = function(Text)
+      -- Store the User ID for later use
+      _G.StoredUserID = tonumber(Text) -- Convert to number
+   end,
+})
+
+-- Creating the teleport button
+local Button = Tab:CreateButton({
+   Name = "Teleport to backyard CREDITS: SEMNEXO",
+   Callback = function()
+      if _G.StoredUserID then
+         local success, err = pcall(function()
+            ReplicatedStorage.FunctionConnections.RequestTeleportToBackyard:InvokeServer(_G.StoredUserID)
+         end)
+
+         game.StarterGui:SetCore("SendNotification", {
+            Title = success and "Success!" or "Error!",
+            Text = success and "Teleported successfully!" or "Teleport failed!",
+            Duration = 3
+         })
+      else
+         game.StarterGui:SetCore("SendNotification", {
+            Title = "Error!",
+            Text = "Invalid User ID! Please enter a valid ID.",
+            Duration = 3
+         })
+      end
+   end,
+})
+
+local Players = game:GetService("Players")
+
+-- TextBox for entering username
+local UsernameInput = Tab:CreateInput({
+   Name = "Enter Username",
+   CurrentValue = "",
+   PlaceholderText = "Type username here...",
+   RemoveTextAfterFocusLost = false,
+   Flag = "UsernameInput",
+   Callback = function(Text)
+      _G.StoredUsername = Text -- Store the entered username
+   end,
+})
+
+-- Button to get and copy the User ID
+local CopyButton = Tab:CreateButton({
+   Name = "Get & Copy User ID",
+   Callback = function()
+      if _G.StoredUsername and _G.StoredUsername ~= "" then
+         local success, userId = pcall(function()
+            return Players:GetUserIdFromNameAsync(_G.StoredUsername)
+         end)
+
+         if success and userId then
+            setclipboard(tostring(userId)) -- Copy User ID to clipboard
+            game.StarterGui:SetCore("SendNotification", {
+               Title = "User ID Copied!",
+               Text = "User ID: " .. userId,
+               Duration = 3
+            })
+         else
+            game.StarterGui:SetCore("SendNotification", {
+               Title = "User Not Found!",
+               Text = "Check the username and try again.",
+               Duration = 3
+            })
+         end
+      else
+         game.StarterGui:SetCore("SendNotification", {
+            Title = "Error!",
+            Text = "Please enter a username.",
+            Duration = 3
+         })
+      end
+   end,
+})
 
 local function colorToTable(clr)
     return {tostring(clr.R * 255), tostring(clr.G * 255), tostring(clr.B * 255)}
