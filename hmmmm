@@ -1447,8 +1447,6 @@ local function startFishing()
     end
 end
 
-local Section = Tab:CreateSection("Or just crash the server with this.")
-
 local Button = Tab:CreateButton({
    Name = "LAG SERVER",
    Callback = function()
@@ -1468,6 +1466,170 @@ local Button = Tab:CreateButton({
         startFishing() -- Start the combined lag actions
    end,
 })
+
+local Section = Tab:CreateSection("mess up animation")
+
+local Button = Tab:CreateButton({
+   Name = "Loop Animation",
+   Callback = function()
+game.Players.LocalPlayer.Character.Animate.Disabled = true
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Unloop Animation",
+   Callback = function()
+game.Players.LocalPlayer.Character.Animate.Disabled = false
+   end,
+})
+
+local Input = Tab:CreateInput({
+   Name = "Animation Speed",
+   CurrentValue = "",
+   PlaceholderText = "enter speed",
+   RemoveTextAfterFocusLost = false,
+   Flag = "Input1",
+   Callback = function(value)
+     local giga = game.Players.LocalPlayer.Character
+    local liga = giga:FindFirstChildOfClass("Humanoid") or Char:FindFirstChildOfClass("AnimationController")
+
+    for i,v in next, liga:GetPlayingAnimationTracks() do
+        v:AdjustSpeed(value)
+    end
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Double speed",
+   Callback = function()
+ local giga = game.Players.LocalPlayer.Character
+    local liga = giga:FindFirstChildOfClass("Humanoid") or Char:FindFirstChildOfClass("AnimationController")
+
+    for i,v in next, liga:GetPlayingAnimationTracks() do
+        v:AdjustSpeed(v.Speed * 2)
+    end
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Decrease speed",
+   Callback = function()
+local giga = game.Players.LocalPlayer.Character
+    local liga = giga:FindFirstChildOfClass("Humanoid") or Char:FindFirstChildOfClass("AnimationController")
+
+    for i,v in next, liga:GetPlayingAnimationTracks() do
+        v:AdjustSpeed(v.Speed * 0.5)
+    end
+   end,
+})
+
+local Section = Tab:CreateSection("auto catch and sell fishes on playground")
+local Toggle = Tab:CreateToggle({
+   Name = "Spoof PLUS",
+   CurrentValue = false,
+   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+if Value then
+			-- When toggle is ON
+			game.Players.LocalPlayer:SetAttribute("PLUS", true)
+		else
+			-- When toggle is OFF
+			game.Players.LocalPlayer:SetAttribute("PLUS", false)
+		end
+   end,
+})
+
+local antiAFK = false
+local Button = Tab:CreateButton({
+   Name = "Anti AFK",
+   Callback = function()
+ antiAFK = not antiAFK
+    if antiAFK then
+   local player = game.Players.LocalPlayer
+local playerHeadIcon = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=420&height=420&format=png"
+
+game.StarterGui:SetCore("SendNotification", {
+    Title = "Anti AFK",
+    Text = "Anti-AFK enabled",
+    Icon = playerHeadIcon,
+    Duration = 3,
+    Button1 = "ok"
+})
+        local vu = game:GetService("VirtualUser")
+        game.Players.LocalPlayer.Idled:Connect(function()
+            vu:CaptureController()
+            vu:ClickButton2(Vector2.new(0, 0))
+        end)
+    else
+     local player = game.Players.LocalPlayer
+local playerHeadIcon = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=420&height=420&format=png"
+        game.StarterGui:SetCore("SendNotification", {
+    Title = "Anti AFK",
+    Text = "Anti-AFK disabled (requires rejoin to reset Idled connection)",
+    Icon = playerHeadIcon,
+    Duration = 3,
+    Button1 = "nigga"
+})
+    end
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Start Farming",
+   Callback = function()
+ while true do
+    -- Fire the ConnectionEvent with argument 10
+    local args1 = { [1] = 10 }
+    game:GetService("ReplicatedStorage").ConnectionEvent:FireServer(unpack(args1))
+
+    -- Invoke the Connection with argument 11 and a table of data
+    local args2 = {
+        [1] = 11,
+        [2] = {
+            ["Power"] = 1,
+            ["FishingZonePos"] = Vector3.new(82.066064453125, -18.149871826171875, 96.40253448486328),
+            ["Face"] = Vector3.new(0.9990392923355103, 0.005603702738881111, -0.04346461594104767),
+            ["PlayerPos"] = Vector3.new(62.121219635009766, -12.388772010803223, 93.4290542602539),
+            ["FishingPolePos"] = Vector3.new(64.75240325927734, -5.818235397338867, 94.7131118774414)
+        }
+    }
+    game:GetService("ReplicatedStorage").Connection:InvokeServer(unpack(args2))
+
+    -- Invoke the Connection with argument 49
+    local args3 = { [1] = 49 }
+    game:GetService("ReplicatedStorage").Connection:InvokeServer(unpack(args3))
+
+    -- Fire the ConnectionEvent with argument 10 again
+    local args4 = { [1] = 10 }
+    game:GetService("ReplicatedStorage").ConnectionEvent:FireServer(unpack(args4))
+
+    -- Invoke the Connection with argument 50 to keep getting fish
+    local args5 = { [1] = 50 }
+    game:GetService("ReplicatedStorage").Connection:InvokeServer(unpack(args5))
+
+    -- Invoke the Connection with argument 51 to keep selling fish
+    local args6 = { [1] = 51 }
+    game:GetService("ReplicatedStorage").Connection:InvokeServer(unpack(args6))
+
+    -- Invoke the Connection with argument 9 and 23 to go to fishing place automatically
+    local args7 = { [1] = 9, [2] = 23 }
+    game:GetService("ReplicatedStorage").Connection:InvokeServer(unpack(args7))
+
+    -- Pause for a very short time to avoid freezing the game
+    wait(0)  -- You can adjust this wait time if you want it to run faster/slower
+end
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Rejoin",
+   Callback = function()
+local TeleportService = game:GetService("TeleportService")
+    TeleportService:Teleport(game.PlaceId)
+   end,
+})
+
+local Section = Tab:CreateSection("other stuff")
 
 local FLYING = false
 
